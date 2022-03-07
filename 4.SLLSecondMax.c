@@ -1,0 +1,229 @@
+
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct node
+{
+    int data;
+    struct node*next;
+}NODE ,*PNODE,**PPNODE;
+
+void InsertFirst(PPNODE Head,int no)
+{
+    PNODE newn=NULL;
+    newn =(PNODE)malloc(sizeof(NODE));
+
+    newn->data=no;
+    newn->next=NULL;
+
+    if(*Head==NULL)
+    {
+        *Head =newn;
+    }
+    else
+    {
+        newn->next=*Head;
+        *Head=newn;
+    }
+}
+int Count(PNODE Head)
+{
+    int iCount=0;
+    while (Head !=NULL)
+    {
+        iCount++;
+        Head =Head->next;
+    }
+    return iCount;
+    
+}
+void Display(PNODE Head)
+{
+    while (Head !=NULL)
+    {
+        printf("|%d| ->",Head->data);
+        Head =Head->next;
+    }
+    printf("NULL");
+    
+}
+
+void InsertLast(PPNODE Head,int no)
+{
+    PNODE temp=*Head;
+    PNODE newn=NULL;
+    newn =(PNODE)malloc(sizeof(NODE));
+
+    newn->data=no;
+    newn->next=NULL;
+
+    if(*Head==NULL)
+    {
+        *Head =newn;
+    }
+    else
+    {
+        while (temp->next!=NULL)
+        {
+           temp=temp->next;
+        }
+        temp->next=newn;
+    }
+}
+
+void InsertAtPos(PPNODE Head,int no,int iPos)
+{
+    PNODE temp=*Head;
+    PNODE newn=NULL;
+    int size=0,i=0;
+    size =Count(*Head);
+
+    if((iPos<1) || (iPos>size+1))
+    {
+        return;
+    }
+    if(iPos ==1)
+    {
+        InsertFirst(Head,no);
+    }
+    else if(iPos ==size +1)
+    {
+        InsertLast(Head,no);
+    }
+    else
+    {
+        newn =(PNODE)malloc(sizeof(NODE));
+        newn->data=no;
+        newn->next=NULL;
+
+        for(i =1 ;i<iPos-1 ;i++)
+        {
+            temp=temp->next;
+        }
+        newn->next=temp->next;
+        temp->next=newn;
+    }
+}
+int SinglyLLMaximum(PNODE Head )
+{
+    int Max=0,i=1,size=0;
+    size=Count(Head);
+    Max =Head->data;
+    
+    
+    while (Head!=NULL)
+    {
+        for(i=1 ;i  <= size +1;i++)
+        {
+           if(Max < Head->data)
+           {
+               Max=Head->data;
+               
+           }
+           else{
+               Head =Head ->next;
+           }
+
+        } 
+        return Max;
+    }
+}
+int secondLargestElement(PNODE Head) 
+{
+   int Larg_Max=0,Sec_Max=0,size=0,i=0;
+   size=Count(Head);
+   Larg_Max =SinglyLLMaximum(Head);
+   Sec_Max =Head->data;
+
+     while (Head!=NULL)
+    {
+        for(i=1 ;i  <= size;i++)
+        {
+             if(Sec_Max !=Larg_Max)
+             {
+                 if(Sec_Max < Head->data)
+                 {
+                     Sec_Max =Head->data;
+                 }
+                 else{
+                     Head=Head->next;
+                 }
+             }
+             else{
+                 Head =Head->next;
+             }
+        }
+        return Sec_Max;
+    }
+}
+
+int main()
+{
+  PNODE first =NULL;
+    int iRet=0,iChoice=1,value=0,pos=0;
+ 
+    while (iChoice !=0)
+    {
+        printf("\n **********************************************\n");
+        printf("\n Enter Your Choice..\n");
+        printf("1 : Insert element at First Position \n");
+        printf("2 : Insert element at Last Position \n");
+        printf("3 : Insert element at Given Position \n");
+        printf("4 : Display Second Largest element from linkedlist \n");
+        printf("5 : Display all contents of LinkedList \n");
+        printf("6 : Count no of nodes present in Linked list \n");
+        printf("0 : Terminate application\n");
+        printf("\n **********************************************\n");
+
+    scanf("%d",&iChoice);
+
+    switch (iChoice)
+    {
+    case 1:
+        printf("Enter data to Insert at First Position\n");
+        scanf("%d",&value);
+        InsertFirst(&first,value);
+        break;
+
+    case 2:
+        printf("Enter data to Insert at Last Position\n");
+        scanf("%d",&value);
+        InsertLast(&first,value);
+        break;
+    
+    case 3:
+        printf("Enter data to Insert at Given Position\n");
+        scanf("%d",&value);
+        printf("Enter Position\n");
+        scanf("%d",&pos);
+        InsertAtPos(&first,value,pos);
+        break;
+    
+    case 4:
+        iRet =secondLargestElement(first);
+        printf("Second Largest number is :%d\n",iRet);
+        break;
+
+    case 5:
+        printf("All elements Present in LinkedList\n");     
+        Display(first);
+        break;
+
+    case 6:
+        iRet =Count(first);
+        printf("No of nodes in LinkedList is:%d\n",iRet);
+        break;
+
+    case 0:
+        printf("Application terminated Sucessfully !!!!!!\n");
+        break;
+
+
+    default:
+       printf("Please enter Proper Choice\n");
+        break;
+    }
+    }
+
+
+    return 0;
+}
